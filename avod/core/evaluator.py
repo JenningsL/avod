@@ -206,6 +206,9 @@ class Evaluator:
             rpn_file_path = prop_score_predictions_dir + "/{}.txt".format(
                 sample_name)
 
+            roi_file_path = prop_score_predictions_dir + "/{}_roi.txt".format(
+                sample_name)
+
             if self.full_model:
                 avod_file_path = avod_predictions_dir + \
                     "/{}.txt".format(sample_name)
@@ -256,6 +259,10 @@ class Evaluator:
                     self.get_avod_predicted_boxes_3d_and_scores(predictions,
                                                                 box_rep)
                 np.savetxt(avod_file_path, predictions_and_scores, fmt='%.5f')
+
+                roi_features = \
+                    self.get_rpn_proposals_roi(predictions)
+                np.savetxt(roi_file_path, roi_features, fmt='%.5f')
 
                 if self.full_model:
                     if box_rep in ['box_3d', 'box_4ca']:
@@ -1021,6 +1028,11 @@ class Evaluator:
                                                 softmax_scores))
 
         return proposals_and_scores
+
+    def get_rpn_proposals_roi(self, predictions):
+        top_img_roi = prediction_dict['avod_top_img_roi']
+        top_bev_roi = prediction_dict['avod_top_bev_roi']
+        return np.column_stack((top_img_roi, top_bev_roi))
 
     def get_avod_predicted_boxes_3d_and_scores(self, predictions,
                                                box_rep):

@@ -628,6 +628,10 @@ class AvodModel(model.DetectionModel):
 
         # prediction_dict[self.PRED_MAX_IOUS] = max_ious
         # prediction_dict[self.PRED_ALL_IOUS] = all_ious
+        top_img_roi = tf.gather(img_rois, nms_indices)
+        top_bev_roi = tf.gather(bev_rois, nms_indices)
+        prediction_dict['avod_top_img_roi'] = top_img_roi
+        prediction_dict['avod_top_bev_roi'] = top_bev_roi
 
         return prediction_dict
 
