@@ -196,4 +196,9 @@ def main(dataset=None):
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    cars_people_dataset_config_path = avod.root_dir() + \
+        '/configs/mb_preprocessing/rpn_cars_people.config'
+    cars_people_dataset = DatasetBuilder.load_dataset_from_config(
+        cars_people_dataset_config_path)
+    do_preprocessing(cars_people_dataset, None)
