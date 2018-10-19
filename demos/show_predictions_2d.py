@@ -49,18 +49,18 @@ def main():
 
     fig_size = (10, 6.1)
 
-    rpn_score_threshold = 0.1
-    avod_score_threshold = 0.1
+    rpn_score_threshold = 0.5
+    avod_score_threshold = 0.5
 
     gt_classes = ['Car']
     # gt_classes = ['Pedestrian', 'Cyclist']
 
     # Overwrite this to select a specific checkpoint
     global_step = None
-    checkpoint_name = 'avod_cars_example'
+    checkpoint_name = 'pyramid_cars_with_aug_example'
 
     # Drawing Toggles
-    draw_proposals_separate = False
+    draw_proposals_separate = True
     draw_overlaid = False
     draw_predictions_separate = True
 
