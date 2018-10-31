@@ -283,8 +283,9 @@ class KittiDataset:
                                                     self.planes_dir)
 
             # Get calibration
-            stereo_calib_p2 = calib_utils.read_calibration(self.calib_dir,
-                                                           int(sample_name)).p2
+            stereo_calib = calib_utils.read_calibration(self.calib_dir,
+                                                           int(sample_name))
+            stereo_calib_p2 = stereo_calib.p2
 
             point_cloud = self.kitti_utils.get_point_cloud(self.bev_source,
                                                            img_idx,
@@ -358,6 +359,7 @@ class KittiDataset:
                 constants.KEY_POINT_CLOUD: point_cloud,
                 constants.KEY_GROUND_PLANE: ground_plane,
                 constants.KEY_STEREO_CALIB_P2: stereo_calib_p2,
+                constants.KEY_STEREO_CALIB: stereo_calib,
 
                 constants.KEY_SAMPLE_NAME: sample_name,
                 constants.KEY_SAMPLE_AUGS: sample.augs
