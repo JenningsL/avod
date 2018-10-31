@@ -56,6 +56,8 @@ class RpnModel(model.DetectionModel):
     PRED_TOP_INDICES = 'rpn_top_indices'
     PRED_TOP_ANCHORS = 'rpn_top_anchors'
     PRED_TOP_OBJECTNESS_SOFTMAX = 'rpn_top_objectness_softmax'
+    PRED_TOP_BEV_ROI = 'rpn_top_bev_roi'
+    PRED_TOP_IMG_ROI = 'rpn_top_img_roi'
 
     ##############################
     # Keys for Loss
@@ -603,6 +605,8 @@ class RpnModel(model.DetectionModel):
             predictions[self.PRED_TOP_ANCHORS] = top_anchors
             predictions[
                 self.PRED_TOP_OBJECTNESS_SOFTMAX] = top_objectness_softmax
+            predictions[self.PRED_TOP_BEV_ROI] = tf.gather(bev_proposal_rois, top_indices)
+            predictions[self.PRED_TOP_IMG_ROI] = tf.gather(img_proposal_rois, top_indices)
 
         return predictions
 
