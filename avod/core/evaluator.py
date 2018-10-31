@@ -1030,8 +1030,11 @@ class Evaluator:
         return proposals_and_scores
 
     def get_rpn_proposals_roi(self, predictions):
-        top_img_roi = prediction_dict['avod_top_img_roi']
-        top_bev_roi = prediction_dict['avod_top_bev_roi']
+        print('avod_top_img_roi shape', predictions['avod_top_img_roi'].shape)
+        print('avod_bev_img_roi shape', predictions['avod_top_bev_roi'].shape)
+        roi_num = len(predictions['avod_top_img_roi'])
+        top_img_roi = np.reshape(predictions['avod_top_img_roi'], (roi_num, -1))
+        top_bev_roi = np.reshape(predictions['avod_top_bev_roi'], (roi_num, -1))
         return np.column_stack((top_img_roi, top_bev_roi))
 
     def get_avod_predicted_boxes_3d_and_scores(self, predictions,
