@@ -355,13 +355,13 @@ class RpnModel(model.DetectionModel):
                 self.bev_feature_maps,
                 self._bev_anchors_norm_pl,
                 tf_box_indices,
-                7) # should be self._proposal_roi_crop_size
+                [7, 7]) # should be self._proposal_roi_crop_size
             # Do ROI Pooling on image without bottleneck
             img_proposal_rois_full = tf.image.crop_and_resize(
                 self.img_feature_maps,
                 self._img_anchors_norm_pl,
                 tf_box_indices,
-                7) # should be self._proposal_roi_crop_size
+                [7, 7]) # should be self._proposal_roi_crop_size
 
         with tf.variable_scope('proposal_roi_fusion'):
             rpn_fusion_out = None
