@@ -245,7 +245,7 @@ class KittiUtils(object):
 
         point_cloud = self.get_point_cloud(source, img_idx,
                                            image_shape=image_shape)
-        filtered_points = self._apply_slice_filter(point_cloud, ground_plane)
+        filtered_points = self._apply_slice_filter(point_cloud[:, :3], ground_plane)
 
         # Create Voxel Grid
         voxel_grid_2d = VoxelGrid2D()
@@ -276,7 +276,7 @@ class KittiUtils(object):
         """
         img_idx = int(sample_name)
 
-        points = self.get_point_cloud(source, img_idx)
+        points = self.get_point_cloud(source, img_idx)[:, :3]
 
         if filter_type == 'slice':
             filtered_points = self._apply_slice_filter(points, ground_plane)

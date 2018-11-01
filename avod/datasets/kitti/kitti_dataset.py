@@ -340,7 +340,7 @@ class KittiDataset:
 
             # Create BEV maps
             bev_images = self.kitti_utils.create_bev_maps(
-                point_cloud, ground_plane)
+                point_cloud[:3, :], ground_plane)
 
             height_maps = bev_images.get('height_maps')
             density_map = bev_images.get('density_map')
