@@ -350,6 +350,19 @@ class RpnModel(model.DetectionModel):
                 tf_box_indices,
                 self._proposal_roi_crop_size)
 
+            # Do ROI Pooling on BEV without bottleneck
+            bev_proposal_rois_full = tf.image.crop_and_resize(
+                self.bev_feature_maps,
+                self._bev_anchors_norm_pl,
+                tf_box_indices,
+                7) # should be self._proposal_roi_crop_size
+            # Do ROI Pooling on image without bottleneck
+            img_proposal_rois_full = tf.image.crop_and_resize(
+                self.img_feature_maps,
+                self._img_anchors_norm_pl,
+                tf_box_indices,
+                7) # should be self._proposal_roi_crop_size
+
         with tf.variable_scope('proposal_roi_fusion'):
             rpn_fusion_out = None
             if self._fusion_method == 'mean':
@@ -605,8 +618,8 @@ class RpnModel(model.DetectionModel):
             predictions[self.PRED_TOP_ANCHORS] = top_anchors
             predictions[
                 self.PRED_TOP_OBJECTNESS_SOFTMAX] = top_objectness_softmax
-            predictions[self.PRED_TOP_BEV_ROI] = tf.gather(bev_proposal_rois, top_indices)
-            predictions[self.PRED_TOP_IMG_ROI] = tf.gather(img_proposal_rois, top_indices)
+            predictions[self.PRED_TOP_BEV_ROI] = tf.gather(bev_proposal_rois_full, top_indices)
+            predictions[self.PRED_TOP_IMG_ROI] = tf.gather(img_proposal_rois_full, top_indices)
 
         return predictions
 
