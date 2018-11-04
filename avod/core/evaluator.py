@@ -255,10 +255,11 @@ class Evaluator:
                 np.savetxt(rpn_file_path, proposals_and_scores, fmt='%.3f')
 
                 # Save predictions
-                predictions_and_scores = \
-                    self.get_avod_predicted_boxes_3d_and_scores(predictions,
-                                                                box_rep)
-                np.savetxt(avod_file_path, predictions_and_scores, fmt='%.5f')
+                if self.full_model:
+                    predictions_and_scores = \
+                        self.get_avod_predicted_boxes_3d_and_scores(predictions,
+                                                                    box_rep)
+                    np.savetxt(avod_file_path, predictions_and_scores, fmt='%.5f')
 
                 roi_features = \
                     self.get_rpn_proposals_roi(predictions)
