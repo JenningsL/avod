@@ -626,13 +626,6 @@ class AvodModel(model.DetectionModel):
             raise NotImplementedError('Prediction dict not implemented for',
                                       self._box_rep)
 
-        # prediction_dict[self.PRED_MAX_IOUS] = max_ious
-        # prediction_dict[self.PRED_ALL_IOUS] = all_ious
-        #img_rois_nms = tf.gather(img_rois, nms_indices)
-        #bev_roi_nms = tf.gather(bev_rois, nms_indices)
-        prediction_dict['avod_top_img_roi'] = img_rois
-        prediction_dict['avod_top_bev_roi'] = bev_rois
-
         return prediction_dict
 
     def sample_mini_batch(self, anchor_box_list_gt, anchor_box_list,

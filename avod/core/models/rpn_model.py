@@ -618,8 +618,8 @@ class RpnModel(model.DetectionModel):
             predictions[self.PRED_TOP_ANCHORS] = top_anchors
             predictions[
                 self.PRED_TOP_OBJECTNESS_SOFTMAX] = top_objectness_softmax
-            predictions[self.PRED_TOP_BEV_ROI] = tf.gather(bev_proposal_rois_full, top_indices)
-            predictions[self.PRED_TOP_IMG_ROI] = tf.gather(img_proposal_rois_full, top_indices)
+        predictions[self.PRED_TOP_BEV_ROI] = tf.gather(bev_proposal_rois_full, top_indices)
+        predictions[self.PRED_TOP_IMG_ROI] = tf.gather(img_proposal_rois_full, top_indices)
 
         return predictions
 
