@@ -350,19 +350,6 @@ class RpnModel(model.DetectionModel):
                 tf_box_indices,
                 self._proposal_roi_crop_size)
 
-            # Do ROI Pooling on BEV without bottleneck
-            bev_proposal_rois_full = tf.image.crop_and_resize(
-                self.bev_feature_maps,
-                self._bev_anchors_norm_pl,
-                tf_box_indices,
-                [7, 7]) # should be self._proposal_roi_crop_size
-            # Do ROI Pooling on image without bottleneck
-            img_proposal_rois_full = tf.image.crop_and_resize(
-                self.img_feature_maps,
-                self._img_anchors_norm_pl,
-                tf_box_indices,
-                [7, 7]) # should be self._proposal_roi_crop_size
-
         with tf.variable_scope('proposal_roi_fusion'):
             rpn_fusion_out = None
             if self._fusion_method == 'mean':
@@ -505,6 +492,45 @@ class RpnModel(model.DetectionModel):
                                                    top_indices)
                 # top_offsets = tf.gather(offsets, top_indices)
                 # top_objectness = tf.gather(objectness, top_indices)
+
+            with tf.variable_scope('proposal_regressed_roi_pooling'):
+                # Get ROI feature of regressed proposal boxes
+                bev_proposal_boxes, bev_proposal_boxes_norm = \
+                    anchor_projector.project_to_bev(
+                        top_anchors,
+                        self._bev_extents)
+                bev_boxes_norm_batches = tf.expand_dims(
+                    bev_proposal_boxes_norm, axis=0)
+
+                # These should be all 0's since there is only 1 image
+                tf_box_indices = get_box_indices(bev_boxes_norm_batches)
+                # Reorder projected boxes into [y1, x1, y2, x2]
+                bev_proposal_boxes_norm_tf_order = \
+                    anchor_projector.reorder_projected_boxes(
+                        bev_proposal_boxes_norm)
+                bev_proposal_rois_full = tf.image.crop_and_resize(
+                    self.bev_feature_maps,
+                    bev_proposal_boxes_norm_tf_order,
+                    tf_box_indices,
+                    [7, 7]) # TODO: don't hardcode
+
+                image_shape = tf.cast(tf.shape(
+                    self.placeholders[RpnModel.PL_IMG_INPUT])[0:2],
+                    tf.float32)
+                img_proposal_boxes, img_proposal_boxes_norm = \
+                    anchor_projector.tf_project_to_image_space(
+                        top_anchors,
+                        self.placeholders[RpnModel.PL_CALIB_P2],
+                        image_shape)
+                # Only reorder the normalized img
+                img_proposal_boxes_norm_tf_order = \
+                    anchor_projector.reorder_projected_boxes(
+                        img_proposal_boxes_norm)
+                img_proposal_rois_full = tf.image.crop_and_resize(
+                    self.img_feature_maps,
+                    img_proposal_boxes_norm_tf_order,
+                    tf_box_indices,
+                    [7, 7]) # TODO: don't hardcode
 
         # Get mini batch
         all_ious_gt = self.placeholders[self.PL_ANCHOR_IOUS]
